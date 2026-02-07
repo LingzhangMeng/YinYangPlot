@@ -31,7 +31,7 @@ This design helps scientists:
 
 ```r
 # install.packages("devtools")
-devtools::install_github("[<your_github_username>/YinYangPlot](https://github.com/LingzhangMeng/YinYangPlot)")
+devtools::install_github("LingzhangMeng/YinYangPlot")
 ```
 
 Load the package:
