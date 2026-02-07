@@ -89,10 +89,11 @@ yinyang(
 
 ### Output
 
-- A `ggplot2` object
-- Ready for further customization or direct export
 
-*(Insert Yin–Yang plot image here)*
+<img width="800" height="800" alt="Yiinyang plot-2" src="https://github.com/user-attachments/assets/11a84254-ee89-425e-9cb7-2190af3b8336" />
+
+
+
 
 ---
 
@@ -121,7 +122,8 @@ yy_volcano(
 )
 ```
 
-*(Insert volcano plot image here)*
+<img width="720" height="650" alt="Volcanoplot" src="https://github.com/user-attachments/assets/c4bf4ac8-7c57-4f5c-ab6c-7c3ecddc5774" />
+
 
 ---
 
@@ -140,28 +142,17 @@ Example:
 ```r
 yy_pirateplot(
   dds = dds,
-  genes = c("IL6", "TNF", "CXCL8"),
+  genes = c("Aloxe3", "Cxcl13", "Igkc", "Sni1", "Cd163", "Wnt3"),
   group_var = "condition"
 )
 ```
 
-*(Insert combined pirate plot image here)*
+<img width="750" height="650" alt="PiratePlot" src="https://github.com/user-attachments/assets/92b16dd2-85cc-4008-98ab-953169bc6d57" />
+
 
 ---
 
-### `yy_pirateplot_simple()`
 
-A lightweight wrapper for **single-gene** or rapid exploratory plotting.
-
-```r
-yy_pirateplot_simple(
-  dds = dds,
-  gene = "IL6",
-  group_var = "condition"
-)
-```
-
----
 
 ## 🔬 Typical Workflow
 
