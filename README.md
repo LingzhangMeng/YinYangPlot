@@ -174,6 +174,226 @@ yy_pirateplot_simple(
 
 ---
 
+## 📘 Full Tutorial: End-to-End Test Script
+
+This section converts the **complete testing script** used during package development into a **step-by-step tutorial**. You can copy–paste this directly into your own workflow to reproduce the analysis and figures.
+
+> **Note**: File paths are examples and should be adapted to your local system.
+
+---
+
+## Step 1. Load Required Packages
+
+```r
+library(dplyr)
+library(ggplot2)
+library(ggrepel)
+library(DESeq2)
+library(apeglm)
+library(org.Rn.eg.db)
+library(AnnotationDbi)
+library(EnsDb.Rnorvegicus.v79)
+library(biomaRt)
+library(tibble)
+library(tidyr)
+library(scales)
+library(stringr)
+library(ggbeeswarm)
+library(patchwork)
+library(plotly)
+library(YinYangPlot)
+```
+
+---
+
+## Step 2. Load and Prepare Count Data
+
+```r
+counts <- read.table(
+  "gene_counts.txt",
+  header = TRUE,
+  row.names = 1,
+  comment.char = "#",
+  check.names = FALSE,
+  stringsAsFactors = FALSE
+)
+
+# Remove annotation columns
+counts <- counts[, -c(1:5)]
+
+# Clean sample names
+colnames(counts) <- sub("\.Aligned\.sortedByCoord\.out\.bam$", "", colnames(counts))
+```
+
+Rename samples into biologically meaningful groups:
+
+```r
+name_mapping <- c(
+  "L1MKL1609037-M_1" = "Control_1",
+  "L1MKL1609042-P_1" = "Treated_1"
+)
+
+colnames(counts) <- sapply(colnames(counts), function(x) {
+  if (x %in% names(name_mapping)) name_mapping[x] else x
+})
+```
+
+---
+
+## Step 3. Sample Metadata
+
+```r
+condition <- factor(c(rep("Control", 5), rep("Treated", 5)),
+                    levels = c("Control", "Treated"))
+
+colData <- data.frame(
+  row.names = colnames(counts),
+  condition = condition
+)
+```
+
+---
+
+## Step 4. Differential Expression Analysis (DESeq2)
+
+```r
+dds <- DESeqDataSetFromMatrix(
+  countData = counts,
+  colData = colData,
+  design = ~ condition
+)
+
+# Filter low counts
+dds <- dds[rowSums(counts(dds)) >= 10, ]
+
+# Run DESeq2
+dds <- DESeq(dds)
+
+res <- results(dds, contrast = c("condition", "Treated", "Control"))
+
+# Shrink fold changes
+resLFC <- lfcShrink(
+  dds,
+  coef = "condition_Treated_vs_Control",
+  type = "apeglm"
+)
+
+res_df <- as.data.frame(resLFC)
+res_df$gene_id <- rownames(res_df)
+```
+
+---
+
+## Step 5. Gene Annotation (EnsDb + biomaRt Fallback)
+
+```r
+ensembl_ids <- gsub("\..*", "", res_df$gene_id)
+
+annotations <- ensembldb::select(
+  EnsDb.Rnorvegicus.v79,
+  keys = ensembl_ids,
+  columns = c("GENEID", "SYMBOL", "GENEBIOTYPE"),
+  keytype = "GENEID"
+)
+
+res_df <- merge(
+  res_df,
+  annotations,
+  by.x = "gene_id",
+  by.y = "GENEID",
+  all.x = TRUE
+)
+
+res_df$gene_symbol <- ifelse(
+  is.na(res_df$SYMBOL),
+  res_df$gene_id,
+  res_df$SYMBOL
+)
+```
+
+---
+
+## Step 6. Define Significance for Visualization
+
+```r
+res_df$significance <- ifelse(
+  res_df$padj < 0.05 & abs(res_df$log2FoldChange) > 0.3,
+  ifelse(res_df$log2FoldChange > 0, "Upregulated", "Downregulated"),
+  "Not significant"
+)
+```
+
+---
+
+## Step 7. Volcano Plot (yy_volcano)
+
+```r
+protein_coding_df <- res_df %>%
+  filter(GENEBIOTYPE == "protein_coding")
+
+yy_volcano(
+  df = protein_coding_df,
+  fc_cutoff = 0.3,
+  p_cutoff = 0.05,
+  top_n_labels = 20,
+  col_up = "darkgreen",
+  col_down = "purple"
+)
+```
+
+*(Insert yy_volcano output figure here)*
+
+---
+
+## Step 8. Yin–Yang Plot
+
+### Basic Usage
+
+```r
+yinyang(protein_coding_df)
+```
+
+### Fully Customized Example
+
+```r
+yinyang(
+  protein_coding_df,
+  title = "Yin–Yang Plot of Protein-Coding DEGs",
+  subtitle = "Top up- and down-regulated genes",
+  top_n_up = 15,
+  top_n_down = 15,
+  yin_color = "#90EE90",
+  yang_color = "#FFB6C1",
+  seed = 42
+)
+```
+
+*(Insert Yin–Yang plot here)*
+
+---
+
+## Step 9. Pirate Plots for Target Genes
+
+```r
+my_genes <- c("Aloxe3", "Cxcl13", "Igkc", "Snai1", "Cd163", "Wnt3")
+
+pirate_plot <- yy_pirateplot(
+  dds_object = dds,
+  results_df = res_df,
+  gene_list = my_genes,
+  condition_col = "condition"
+)
+
+pirate_plot
+```
+
+*(Insert pirate plot figure here)*
+
+---
+
+This completes a **full reproducible workflow** from raw counts to Yin–Yang visualization.
+
+
 ## 🧠 Design Philosophy
 
 YinYangPlot is built with the following principles:
