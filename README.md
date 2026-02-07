@@ -4,6 +4,10 @@
 
 The package also provides publication-ready volcano plots and enhanced pirate plots, all optimized for RNA-seq / differential expression workflows (e.g. DESeq2 results).
 
+
+<img width="1259" height="1235" alt="image" src="https://github.com/user-attachments/assets/5f34a8cf-4625-4f32-a57a-50e79ffa6c6e" />
+
+
 ---
 
 ## ✨ Why Yin–Yang Plot?
