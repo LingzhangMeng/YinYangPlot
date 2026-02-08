@@ -847,9 +847,9 @@ Issues, feature requests, and pull requests are welcome.
 
 ## 📬 Contact
 
-**Prof. Dr. rer. nat. Lingzhang Meng** /n
-E-mail: lzmeng@gxams.org.cn /n
-Center for Medical Big Data and Artificial Intelligence Research  /n
+**Prof. Dr. rer. nat. Lingzhang Meng** 
+E-mail: lzmeng@gxams.org.cn
+Center for Medical Big Data and Artificial Intelligence Research
 Guangxi Academy of Medical Sciences & People’s Hospital of Guangxi Zhuang Autonomous Region
 
 ---
