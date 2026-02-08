@@ -98,7 +98,7 @@ yinyang(
 
 ---
 
-## 2️⃣ Enhanced Volcano Plot (`yy_volcano()`)
+## 2️⃣ Customized Volcano Plot (`yy_volcano()`)
 
 ### Purpose
 
