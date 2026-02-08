@@ -35,8 +35,8 @@ This design helps scientists:
 ## 📦 Installation
 
 ```r
-# install.packages("devtools")
-devtools::install_github("LingzhangMeng/YinYangPlot")
+library(devtools)
+devtools::install_github("LingzhangMeng/YinYangPlot", dependencies = TRUE)
 ```
 
 Load the package:
