@@ -225,8 +225,35 @@ colnames(counts) <- sub("\.Aligned\.sortedByCoord\.out\.bam$", "", colnames(coun
 ```
 
 
+```r
+# Clean column names
+colnames(counts) <- sub("\\.Aligned\\.sortedByCoord\\.out\\.bam$", "", colnames(counts))
+colnames(counts) <- sub("^aligned/", "", colnames(counts))
 
-Rename samples into biologically meaningful groups:
+# Check column names again
+colnames(counts)
+```
+
+[output]
+```
+> colnames(counts)
+[1] "Treated_1" "Treated_2" "Treated_3" "Treated_4" "Treated_5"
+```
+
+```r
+head(counts, 5)
+```
+
+[output]
+```
+> head(counts,5)
+                   Treated_1 Treated_2 Treated_3 Treated_4 Treated_5
+ENSRNOG00000066169         3         5         4         1         4
+ENSRNOG00000070168         0         0         0         0         0
+ENSRNOG00000070901      3770      4732      5964      5108      4484
+ENSRNOG00000018029       161       181       188        54       296
+ENSRNOG00000031391         0        24        17         4        13
+```
 
 ```r
 name_mapping <- c(
