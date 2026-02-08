@@ -19,23 +19,27 @@ yy_volcano(
 )
 }
 \arguments{
-\item{log2fc_col}{Column name for log2 fold change}
+\item{df}{Data frame with DE results}
 
-\item{padj_col}{Column name for adjusted p-value}
+\item{log2fc_col}{Column name for log2 fold change (default: "log2FoldChange")}
 
-\item{gene_col}{Column name for gene symbols}
+\item{padj_col}{Column name for adjusted p-value (default: "padj")}
 
-\item{top_n_labels}{Number of top genes to label}
+\item{gene_col}{Column name for gene symbols (default: "gene_symbol")}
 
-\item{boxed_labels}{Logical, whether labels have boxes}
+\item{fc_cutoff}{Threshold for fold change significance (default: 0.5)}
 
-\item{data}{Data frame with DE results}
+\item{p_cutoff}{Threshold for adjusted p-value significance (default: 0.05)}
 
-\item{padj_threshold}{Threshold for adjusted p-value significance}
+\item{top_n_labels}{Number of top genes to label (default: 20)}
 
-\item{lfc_threshold}{Threshold for log2 fold change significance}
+\item{boxed_labels}{Logical, whether labels have boxes (default: TRUE)}
 
-\item{title}{Plot title}
+\item{col_up}{Color for upregulated genes (default: "red")}
+
+\item{col_down}{Color for downregulated genes (default: "blue")}
+
+\item{label_size}{Font size for gene labels (default: 3)}
 }
 \value{
 ggplot2 object

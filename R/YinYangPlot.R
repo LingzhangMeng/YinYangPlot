@@ -2,18 +2,20 @@
 #'
 #' Enhanced Volcano Plot for RNA-seq DE Results
 #'
-#' @param data Data frame with DE results
-#' @param log2fc_col Column name for log2 fold change
-#' @param padj_col Column name for adjusted p-value
-#' @param gene_col Column name for gene symbols
-#' @param padj_threshold Threshold for adjusted p-value significance
-#' @param lfc_threshold Threshold for log2 fold change significance
-#' @param top_n_labels Number of top genes to label
-#' @param title Plot title
-#' @param boxed_labels Logical, whether labels have boxes
+#' @param df Data frame with DE results
+#' @param log2fc_col Column name for log2 fold change (default: "log2FoldChange")
+#' @param padj_col Column name for adjusted p-value (default: "padj")
+#' @param gene_col Column name for gene symbols (default: "gene_symbol")
+#' @param fc_cutoff Threshold for fold change significance (default: 0.5)
+#' @param p_cutoff Threshold for adjusted p-value significance (default: 0.05)
+#' @param top_n_labels Number of top genes to label (default: 20)
+#' @param boxed_labels Logical, whether labels have boxes (default: TRUE)
+#' @param col_up Color for upregulated genes (default: "red")
+#' @param col_down Color for downregulated genes (default: "blue")
+#' @param label_size Font size for gene labels (default: 3)
 #' @return ggplot2 object
+#' @importFrom utils head
 #' @export
-#'
 yy_volcano <- function(
     df,
     log2fc_col = "log2FoldChange",
@@ -27,13 +29,9 @@ yy_volcano <- function(
     col_down   = "blue",      # NEW: color for downregulated
     label_size = 3             # NEW: font size for gene labels
 ) {
-  library(ggplot2)
-  library(ggrepel)
-  library(dplyr)
-
   df <- df %>%
     dplyr::mutate(
-      sig = case_when(
+      sig = dplyr::case_when(
         (!!as.name(padj_col) < p_cutoff & !!as.name(log2fc_col) > fc_cutoff) ~ "Up",
         (!!as.name(padj_col) < p_cutoff & !!as.name(log2fc_col) < -fc_cutoff) ~ "Down",
         TRUE ~ "NotSignificant"
@@ -116,7 +114,7 @@ yy_volcano <- function(
 
 
 
-#' Create Yin-Yang Gene Expression Plot
+#' Create Yin-Yang Plot
 #'
 #' @description
 #' Generates a circular yin-yang plot for visualizing differential gene expression.
@@ -223,6 +221,9 @@ yy_volcano <- function(
 #' @importFrom stringr str_sub
 #' @importFrom grDevices dev.list dev.size
 #' @importFrom stats quantile
+#' @importFrom stats runif quantile
+#' @importFrom utils head
+#' @importFrom grDevices dev.list dev.size
 #' @export
 yinyang <- function(
     data,
@@ -669,6 +670,8 @@ yinyang <- function(
 #' @import ggbeeswarm
 #' @import patchwork
 #' @import DESeq2
+#' @importFrom DESeq2 colData assay counts rlog varianceStabilizingTransformation
+#' @importFrom utils head
 #' @export
 yy_pirateplot <- function(
     dds_object,

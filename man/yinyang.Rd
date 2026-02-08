@@ -2,7 +2,7 @@
 % Please edit documentation in R/YinYangPlot.R
 \name{yinyang}
 \alias{yinyang}
-\title{Create Yin-Yang Gene Expression Plot}
+\title{Create Yin-Yang Plot}
 \usage{
 yinyang(
   data,

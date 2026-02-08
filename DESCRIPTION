@@ -1,7 +1,7 @@
 Package: YinYangPlot
 Type: Package
 Title: Yin-Yang Inspired Visualization for Differential Expression Analysis
-Version: 0.1.0
+Version: 0.1.1
 Authors@R: 
     person("Lingzhang", "Meng", 
            email = "lzmeng@gxams.org.cn",
@@ -10,32 +10,17 @@ Description:
     YinYangPlot provides volcano plots, Yin-Yang circular plots,
     and pirate plots for visualizing differential gene expression
     and group-wise expression distributions in omics data.
-License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Imports:
-    ggplot2,
-    dplyr,
-    rlang,
-    ggbeeswarm,
-    ggrepel,
-    patchwork,
-    scales,
-    tidyr,
-    DESeq2,
-    stringr,
-    yaml,
-    ggpubr,
-    gridExtra,
-    RColorBrewer,
-    viridis
-Suggests:
-    knitr,
-    rmarkdown,
-    testthat (>= 3.0.0),
-    BiocStyle,
-    covr,
-    shiny,
-    plotly
+    ggplot2 (>= 3.4.0),
+    dplyr (>= 1.1.0),
+    ggrepel (>= 0.9.0),
+    scales (>= 1.2.0),
+    stringr (>= 1.5.0),
+    ggbeeswarm (>= 0.7.0),
+    patchwork (>= 1.1.0),
+    DESeq2 (>= 1.40.0)
+License: MIT + file LICENSE
 RoxygenNote: 7.3.3
 usethis: :use_mit_license
