@@ -218,7 +218,8 @@ colnames(counts) <- sub("\.Aligned\.sortedByCoord\.out\.bam$", "", colnames(coun
 ```
 
 
-```putput
+[output]
+```
 > colnames(counts)
 [1] "Treated_1" "Treated_2" "Treated_3" "Treated_4" "Treated_5"
 ```
