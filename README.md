@@ -154,7 +154,7 @@ yy_pirateplot(
 
 
 
-## 🔬 Typical Workflow
+## 🔬 Detailed Workflow / Tutorials
 
 1. Perform RNA-seq differential expression analysis (e.g. DESeq2)
 2. Annotate genes (symbol, biotype)
