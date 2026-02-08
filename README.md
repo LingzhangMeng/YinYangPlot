@@ -176,6 +176,7 @@ This section converts the **complete testing script** used during package develo
 ## Step 1. Load Required Packages
 
 ```r
+library(YinYangPlot)
 library(dplyr)
 library(ggplot2)
 library(ggrepel)
@@ -192,7 +193,6 @@ library(stringr)
 library(ggbeeswarm)
 library(patchwork)
 library(plotly)
-library(YinYangPlot)
 ```
 
 ---
@@ -201,7 +201,7 @@ library(YinYangPlot)
 
 ```r
 counts <- read.table(
-  "gene_counts.txt",
+  "/path/gene_counts.txt",
   header = TRUE,
   row.names = 1,
   comment.char = "#",
@@ -211,10 +211,19 @@ counts <- read.table(
 
 # Remove annotation columns
 counts <- counts[, -c(1:5)]
+counts <- counts[, -annotation_cols]
 
 # Clean sample names
 colnames(counts) <- sub("\.Aligned\.sortedByCoord\.out\.bam$", "", colnames(counts))
 ```
+
+
+```putput
+> colnames(counts)
+[1] "Treated_1" "Treated_2" "Treated_3" "Treated_4" "Treated_5"
+```
+
+
 
 Rename samples into biologically meaningful groups:
 
