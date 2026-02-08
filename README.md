@@ -684,11 +684,14 @@ yy_volcano(
    p_cutoff = 0.05,           # Adjusted p-value threshold
    top_n_labels = 20,         # Label top 20 DEGs
    boxed_labels = TRUE,       # Box labels for readability
-   col_up = "darkgreen",      # Upregulated color
-   col_down = "purple",       # Downregulated color
+   col_up = "purple",      # Upregulated color
+   col_down = "darkgreen",       # Downregulated color
    label_size = 4             
 )
 ```
+
+<img width="700" height="600" alt="image" src="https://github.com/user-attachments/assets/25cad9f9-ae09-43f2-af78-85704cbf4d1d" />
+
 
 * * *
 
@@ -700,29 +703,64 @@ The `yinyang()` plot offers a novel circular layout where the **radius** represe
 ```
 # Full customization of the Yin-Yang Plot
 yinyang(protein_coding_df,
-         title = "Yin-Yang Plot for DEGs (Protein-Coding)",
-         subtitle = "Top upregulated & downregulated genes\nRadius = |log2FC|, Point size = -log10(padj)",
-         
-         # Selection & Labeling
-         show_all = TRUE,         
-         top_n_up = 10,           
-         top_n_down = 10,         
-         gene_label_size = 5,     
-         
-         # Aesthetics
-         point_size_range = c(2, 8),
-         yin_color = "#90EE90",    # Light Green
-         yang_color = "#FFB6C1",   # Light Pink
-         point_yin_color = "#006400",
-         point_yang_color = "#8B0000",
-         border_color = "gold",
-         
-         # Scaling
-         min_radius = 0.4,
-         max_radius = 0.9,
-         seed = 42
+        
+        # Titles
+        title = "Yin-Yang Plot for DEGs(Protein-Coding)",
+        subtitle = "Top 15 upregulated & downregulated protein-coding genes\nRadius =|log2FC|, Point size = -log10(padj)",
+        
+        # Column mappings (using defaults, but specifying for clarity)
+        gene_id_col = "gene_id",
+        gene_symbol_col = "gene_symbol",
+        log2fc_col = "log2FoldChange",
+        padj_col = "padj",
+        significance_col = "significance",
+        
+        # Gene selection
+        show_all = TRUE,   # set "TRUE" or "FALSE"
+        top_n_up = 10,     # label top 15 up-regulated genes
+        top_n_down = 10,   # label top 15 down-regulated genes
+        
+        # Labeling
+        gene_label_size = 5,    # Manual size (not auto-calculated)
+        label_top_n = 20,         # label top gene (up- & down- regulated genes)
+        
+        # Point aesthetics
+        point_size_range = c(2, 8),
+        background_alpha = 0.2,
+        
+        # Legend
+        show_legend = TRUE,
+        
+        
+        # Colors
+        yin_color = "#90EE90",
+        yang_color = "#FFB6C1",
+        point_yin_color = "#006400",
+        point_yang_color = "#8B0000",
+        
+        # Border
+        border_color = "gold",  # set "NULL" to remove border
+        border_size = 1,
+        
+        # Radius settings
+        min_radius = 0.4,
+        max_radius = 0.9,
+        radius_power = 0.75,  # Square root-like scaling
+        
+        # Device size for auto-sizing (if needed)
+        plot_device_width = 10,
+        plot_device_height = 8,
+        
+        # Reproducibility
+        seed = 42
 )
+
 ```
+
+<img width="725" height="630" alt="image" src="https://github.com/user-attachments/assets/deab312e-3ff7-46db-b891-5ae765ccc5d2" />
+
+
+
 
 ### Interpretation of Results
 
@@ -785,6 +823,9 @@ pirate_plot <- yy_pirateplot(
 combined_plot <- pirate_plot[["combined_plot"]]
 print(combined_plot)
 ```
+
+<img width="700" height="630" alt="image" src="https://github.com/user-attachments/assets/7e104234-0572-409e-8f0f-570db5839c03" />
+
 
 ### Key Visualization Features
 
