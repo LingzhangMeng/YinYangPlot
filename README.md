@@ -757,7 +757,7 @@ yinyang(protein_coding_df,
 
 ```
 
-<img width="725" height="630" alt="image" src="https://github.com/user-attachments/assets/deab312e-3ff7-46db-b891-5ae765ccc5d2" />
+<img width="680" height="630" alt="image" src="https://github.com/user-attachments/assets/deab312e-3ff7-46db-b891-5ae765ccc5d2" />
 
 
 
