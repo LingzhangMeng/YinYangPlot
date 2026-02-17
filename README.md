@@ -627,7 +627,7 @@ The script iterates through every detected gene biotype (including those with `N
 3.  **Downregulated Genes:** Subset with negative fold changes.
     
 ```
-for (bt in biotypes) {
+for (bt in biotype) {
    bt_name <- ifelse(is.na(bt), "NA", bt)
    
    # Subset and Filter
