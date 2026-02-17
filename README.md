@@ -389,35 +389,83 @@ To make the results biologically interpretable, we map Ensembl IDs to symbols an
 # Remove version numbers from Ensembl IDs if present
 ensembl_ids <- gsub("\\..*", "", rownames(res_df))
 
-# METHOD 1: Using EnsDb package
-annotations <- tryCatch({
-   edb <- EnsDb.Rnorvegicus.v79
-   ensembldb::select(edb,
-                     keys = ensembl_ids,
-                     columns = c("GENEID", "SYMBOL", "GENEBIOTYPE", "GENENAME", 
-                                 "ENTREZID", "SEQNAME", "GENESEQSTART", "GENESEQEND"),
-                     keytype = "GENEID")
-}, error = function(e) { NULL })
+# METHOD 1: Using EnsDb package (more reliable)
+cat("\n=== Annotating genes using EnsDb ===\n")
 
-# METHOD 2: Using biomaRt (Fallback if EnsDb is unavailable)
+# Get comprehensive annotations
+annotations <- tryCatch({
+  # Try to get from EnsDb
+  edb <- EnsDb.Rnorvegicus.v79
+  
+  # Query for multiple annotation types - use ensembldb::select explicitly
+  ensembldb::select(edb,
+                    keys = ensembl_ids,
+                    columns = c("GENEID", "SYMBOL", "GENEBIOTYPE", "GENENAME", 
+                                "ENTREZID", "SEQNAME", "GENESEQSTART", "GENESEQEND"),
+                    keytype = "GENEID")
+}, error = function(e) {
+  cat("EnsDb annotation failed, trying biomaRt...\n")
+  NULL
+})
+
+
+
+
+# METHOD 2: Using biomaRt (fallback)
 if (is.null(annotations) || nrow(annotations) == 0) {
-   mart <- useMart("ensembl", dataset = "rnorvegicus_gene_ensembl")
-   annotations <- getBM(attributes = c("ensembl_gene_id", "external_gene_name", 
-                                       "gene_biotype", "description", "entrezgene_id",
-                                       "chromosome_name", "start_position", "end_position"),
+  cat("\n=== Annotating genes using biomaRt ===\n")
+  
+  tryCatch({
+    # Setup biomaRt connection
+    mart <- useMart("ensembl", dataset = "rnorvegicus_gene_ensembl")
+    
+    # Define attributes to retrieve
+    attributes <- c("ensembl_gene_id", "external_gene_name", 
+                    "gene_biotype", "description", "entrezgene_id",
+                    "chromosome_name", "start_position", "end_position")
+    
+    # Query biomaRt
+    annotations <- getBM(attributes = attributes,
                          filters = "ensembl_gene_id",
                          values = ensembl_ids,
                          mart = mart)
-   colnames(annotations) <- c("GENEID", "SYMBOL", "GENEBIOTYPE", "GENENAME", 
-                               "ENTREZID", "SEQNAME", "GENESEQSTART", "GENESEQEND")
+    
+    # Rename columns to match EnsDb output
+    colnames(annotations) <- c("GENEID", "SYMBOL", "GENEBIOTYPE", 
+                               "GENENAME", "ENTREZID", "SEQNAME", 
+                               "GENESEQSTART", "GENESEQEND")
+  }, error = function(e) {
+    cat("biomaRt annotation also failed. Using basic annotation.\n")
+    annotations <- data.frame(GENEID = ensembl_ids,
+                              SYMBOL = NA,
+                              GENEBIOTYPE = "unknown",
+                              GENENAME = NA,
+                              stringsAsFactors = FALSE)
+  })
 }
 
-# Merge annotations back into the results dataframe
-res_df <- merge(res_df, annotations, by.x = "gene_id", by.y = "GENEID", all.x = TRUE, sort = FALSE)
+# METHOD 3: Basic annotation as fallback
+if (!exists("annotations") || nrow(annotations) == 0) {
+  annotations <- data.frame(GENEID = ensembl_ids,
+                            SYMBOL = NA,
+                            GENEBIOTYPE = "unknown",
+                            GENENAME = NA,
+                            stringsAsFactors = FALSE)
+}
 
-# Use Ensembl ID as fallback for missing symbols
+# Merge annotations with results
+res_df <- merge(res_df, annotations, 
+                by.x = "gene_id", by.y = "GENEID", 
+                all.x = TRUE, sort = FALSE)
+
+# Ensure gene_symbol column exists
+if (!"SYMBOL" %in% colnames(res_df)) {
+  res_df$SYMBOL <- NA
+}
+
+# For genes without symbols, use Ensembl ID as fallback
 res_df$gene_symbol <- ifelse(is.na(res_df$SYMBOL) | res_df$SYMBOL == "", 
-                              res_df$gene_id, res_df$SYMBOL)
+                             res_df$gene_id, res_df$SYMBOL)
 ```
 
 * * *
